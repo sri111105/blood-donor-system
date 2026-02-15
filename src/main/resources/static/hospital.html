@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hospital - Blood Donor</title>
+
+<!-- Bootstrap CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    background: url("images/OIP.jpg") no-repeat center center fixed;
+    background-size: cover;
+    padding:20px;
+}
+
+.overlay{
+    background: rgba(255,255,255,0.9);
+    min-height:100vh;
+    padding:20px;
+    border-radius:20px;
+}
+
+h2{
+    text-align:center;
+    color:#b30000;
+    font-weight:bold;
+}
+
+.card{
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+
+#donorForm{
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container overlay">
+
+<h2>Hospital Blood Donor Management</h2>
+
+<!-- TOP CONTROLS -->
+<div class="d-flex gap-2 mb-3">
+    <button class="btn btn-success" onclick="toggleForm()">Add Donor</button>
+
+    <input id="searchBlood" class="form-control"
+           placeholder="Search Blood Group (O+, A-...)">
+
+    <input id="searchCity" class="form-control"
+           placeholder="Search City (Chennai, Madurai...)">
+
+    <button class="btn btn-secondary" onclick="goHome()">Home</button>
+</div>
+
+<!-- ADD DONOR FORM -->
+<div class="card mb-3" id="donorForm">
+    <h5>Add Donor (Hospital)</h5>
+
+    <input id="donorName" class="form-control mb-2" placeholder="Name">
+
+    <select id="bloodGroup" class="form-select mb-2">
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+    </select>
+
+    <input id="address" class="form-control mb-2" placeholder="Address">
+    <input id="city" class="form-control mb-2" placeholder="City">
+    <input id="phone" class="form-control mb-2" placeholder="Phone">
+
+    <button class="btn btn-danger w-100" onclick="addDonor()">Submit</button>
+</div>
+
+<!-- DONOR TABLE -->
+<div class="card">
+<table class="table table-bordered text-center align-middle" id="donorTable">
+<thead class="table-dark">
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Blood</th>
+    <th>Address</th>
+    <th>City</th>
+    <th>Phone</th>
+    <th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+function goHome(){
+    window.location.href = "index.html";
+}
+
+function toggleForm(){
+    donorForm.style.display =
+        donorForm.style.display === "none" ? "block" : "none";
+}
+
+/* LOAD DONORS */
+function loadDonors(){
+    fetch("http://localhost:8080/blood")
+    .then(res => res.json())
+    .then(data => {
+        const tbody = document.querySelector("#donorTable tbody");
+        tbody.innerHTML = "";
+
+        const bloodSearch = searchBlood.value.toUpperCase();
+        const citySearch  = searchCity.value.toUpperCase();
+
+        data.forEach(d => {
+            if (
+                d.bloodGroup.toUpperCase().includes(bloodSearch) &&
+                d.city.toUpperCase().includes(citySearch)
+            ) {
+                tbody.innerHTML += `
+                <tr>
+                    <td>${d.id}</td>
+                    <td>${d.name}</td>
+                    <td>${d.bloodGroup}</td>
+                    <td>${d.address}</td>
+                    <td>${d.city}</td>
+                    <td>${d.phone}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteDonor(${d.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>`;
+            }
+        });
+    });
+}
+
+/* ADD DONOR */
+function addDonor(){
+    const donor = {
+        name: donorName.value,
+        bloodGroup: bloodGroup.value,
+        address: address.value,
+        city: city.value,
+        phone: phone.value
+    };
+
+    fetch("http://localhost:8080/blood", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(donor)
+    })
+    .then(() => {
+        alert("Donor Added ✅");
+        donorForm.style.display = "none";
+        loadDonors();
+    });
+}
+
+/* DELETE DONOR */
+function deleteDonor(id){
+    if(confirm("Are you sure to delete this donor?")){
+        fetch(`http://localhost:8080/blood/${id}`, {
+            method: "DELETE"
+        })
+        .then(() => {
+            alert("Deleted Successfully ✅");
+            loadDonors();
+        });
+    }
+}
+
+searchBlood.addEventListener("input", loadDonors);
+searchCity.addEventListener("input", loadDonors);
+window.onload = loadDonors;
+</script>
+
+</body>
+</html>

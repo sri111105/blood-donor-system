@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Donor</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body{
+    background:#f4f6f9;
+    padding:30px;
+}
+.card{
+    max-width:500px;
+    margin:auto;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card shadow">
+    <h3 class="text-center text-success mb-3"> Become a Donor</h3>
+
+    <!-- Changed id to avoid 'name' conflict -->
+    <input class="form-control mb-2" id="donorName" placeholder="Name">
+    
+    <select class="form-select mb-2" id="bloodGroup">
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+    </select>
+    
+    <input class="form-control mb-2" id="address" placeholder="Address">
+    <input class="form-control mb-2" id="city" placeholder="City">
+    <input class="form-control mb-2" id="phone" placeholder="Phone">
+
+    <button class="btn btn-success w-100" onclick="addDonor()">Submit</button>
+</div>
+
+<script>
+function addDonor(){
+    // Use unique IDs to avoid conflicts with 'name'
+    const donor = {
+        name: document.getElementById("donorName").value,
+        bloodGroup: document.getElementById("bloodGroup").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        phone: document.getElementById("phone").value
+    };
+
+    console.log(donor); // optional: check JSON before POST
+
+    fetch("http://localhost:8080/blood", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(donor)
+    })
+    .then(() => {
+        alert("Thank you for donating blood!");
+        window.location.href = "index.html";
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Blood Donor Portal</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family: 'Poppins', sans-serif;
+
+    /* 🔥 Background image */
+    background: url("images/OIP.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* CARD */
+.card{
+    padding:45px;
+    text-align:center;
+    border-radius:18px;
+    min-width:320px;
+
+    /* glass effect */
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(6px);
+}
+
+/* TITLE */
+h2{
+    font-weight:700;
+    letter-spacing:1px;
+    color:red;   /* hospital red */
+}
+
+/* SUB TEXT (optional future use) */
+p{
+    color:black;
+    font-size:14px;
+}
+
+/* BUTTONS */
+button{
+    width:220px;
+    margin:12px;
+    font-weight:600;
+    letter-spacing:0.5px;
+}
+
+/* BUTTON COLORS */
+.btn-primary{
+    background:#0056b3;
+    border:none;
+}
+.btn-primary:hover{
+    background:#003f8a;
+}
+
+.btn-success{
+    background:#198754;
+    border:none;
+}
+.btn-success:hover{
+    background:#146c43;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card shadow-lg">
+    <h2 class="mb-4">Blood Donor System</h2>
+
+    <button class="btn btn-primary btn-lg" onclick="goHospital()">Hospital</button>
+    <br>
+    <button class="btn btn-success btn-lg" onclick="goPeople()">Peoples</button>
+</div>
+
+<script>
+function goHospital(){
+    window.location.href="hospital.html";
+}
+function goPeople(){
+    window.location.href="people.html";
+}
+</script>
+
+</body>
+</html>
